@@ -41,6 +41,29 @@ Calculator.prototype = function () {
             setEquation.call(this,'');
         },
 
+        calculate = function () {
+            if (!this.operator || this.lasNumber === null) return;
+            var displayedNumber = parseFloat(this.eqCtl.value);
+            var newValue = 0;
+            switch (this.operator) {
+                case '+':
+                    newValue = add.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '-':
+                    newValue = subtract.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '*':
+                    newValue = multiply.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '/':
+                    newValue = divide.call(this, this.lasNumber, displayedNumber);
+                    break;
+            }
+
+            setValue.call(this, newValue);
+            this.lasNumber = newValue;
+        },
+
         setOperator = function (newOperator) {
             if (newOperator === '=') {
                 this.equalsPressed = true;
@@ -71,30 +94,9 @@ Calculator.prototype = function () {
             if (this.operatorSet) {
                 setEquation.call(this, this.eqCtl.innerHTML + button.innerHTML);
             }
-        },
-
-        calculate = function () {
-            if (!this.operator || this.lasNumber === null) return;
-            var displayedNumber = parseFloat(this.eqCtl.value);
-            var newValue = 0;
-            switch (this.operator) {
-                case '+':
-                    newValue = add.call(this, this.lasNumber, displayedNumber);
-                    break;
-                case '-':
-                    newValue = subtract.call(this, this.lasNumber, displayedNumber);
-                    break;
-                case '*':
-                    newValue = multiply.call(this, this.lasNumber, displayedNumber);
-                    break;
-                case '/':
-                    newValue = divide.call(this, this.lasNumber, displayedNumber);
-                    break;
-            }
-
-            setValue.call(this, newValue);
-            this.lasNumber = newValue;
         };
+
+
 
     return {
         numberClick : numberClick,
