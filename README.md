@@ -1,7 +1,7 @@
 
 ## My Calculator
 
-To run the calculator, please make sure that you have gulp installed and then run gulp serve-dev command:
+To run the calculator, please make sure that you have gulp installed and then run gulp serve-dev command.
 
 ## License
 

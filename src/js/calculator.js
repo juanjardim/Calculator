@@ -7,98 +7,101 @@ var Calculator = function (eq, tb) {
     this.equalsPressed = false;
     this.lasNumber = null;
 };
+Calculator.prototype = function () {
+    var add = function (x, y) {
+            return x + y;
+        },
+        subtract = function (x, y) {
+            return x - y;
+        },
 
-Calculator.prototype = {
-    add: function (x, y) {
-        return x + y;
-    },
+        multiply = function (x, y) {
+            return x * y;
+        },
 
-    subtract: function (x, y) {
-        return x - y;
-    },
+        divide = function (x, y) {
+            if (y === 0) {
+                window.alert("Can't divide by 0");
+            }
+            return x / y;
+        },
 
-    multiply: function (x, y) {
-        return x * y;
-    },
+        setValue = function (value) {
+            this.eqCtl.value = value;
+        },
 
-    divide: function (x, y) {
-        if (y === 0) {
-            window.alert("Can't divide by 0");
-        }
-        return x / y;
-    },
+        setEquation = function (value) {
+            this.currentNumberCtl.innerHTML = value;
+        },
 
-    setValue: function (value) {
-        this.eqCtl.value = value;
-    },
+        clearNumbers = function () {
+            this.lasNumber = null;
+            this.equalsPressed = this.operatorSet = false;
+            setValue.call(this, '0');
+            setEquation.call(this,'');
+        },
 
-    setEquation: function (value) {
-        this.currentNumberCtl.innerHTML = value;
-    },
+        setOperator = function (newOperator) {
+            if (newOperator === '=') {
+                this.equalsPressed = true;
+                calculate.call(this);
+                setEquation.call(this,'');
+                return;
+            }
+            if (!this.equalsPressed) calculate.call(this);
+            this.equalsPressed = false;
+            this.operator = newOperator;
+            this.operatorSet = true;
+            this.lasNumber = parseFloat(this.eqCtl.value);
+            var eqText = (this.eqCtl.innerHTML === '') ? this.lasNumber + ' ' + this.operator + ' ' : this.eqCtl.innerHTML + ' ' + this.operator + ' ';
+            setEquation.call(this, eqText);
+        },
 
-    clearNumbers: function () {
-        this.lasNumber = null;
-        this.equalsPressed = this.operatorSet = false;
-        this.setValue('0');
-        this.setEquation('');
-        return;
-    },
+        numberClick = function (e) {
+            if (this.equalsPressed) {
+                setValue.call(this, '');
+            }
+            var button = (e.target) ? e.target : e.srcElement;
+            if (this.operatorSet || this.currentNumberCtl.innerHTML === '0') {
+                setValue.call(this, '');
+                this.operatorSet = false;
+            }
 
-    setOperator: function (newOperator) {
-        if (newOperator === '=') {
-            this.equalsPressed = true;
-            this.calculate();
-            this.setEquation('');
-            return;
-        }
-        if (!this.equalsPressed) this.calculate();
-        this.equalsPressed = false;
-        this.operator = newOperator;
-        this.operatorSet = true;
-        this.lasNumber = parseFloat(this.eqCtl.value);
-        var eqText = (this.eqCtl.innerHTML === '') ? this.lasNumber + ' ' + this.operator + ' ' : this.eqCtl.innerHTML + ' ' + this.operator + ' ';
-        this.setEquation(eqText);
-    },
+            setValue.call(this, this.eqCtl.value + button.innerHTML);
+            if (this.operatorSet) {
+                setEquation.call(this, this.eqCtl.innerHTML + button.innerHTML);
+            }
+        },
 
-    numberClick: function (e) {
-        if(this.equalsPressed) {
-            this.setValue('');
-        }
-        var button = (e.target) ? e.target : e.srcElement;
-        if (this.operatorSet || this.currentNumberCtl.innerHTML === '0') {
-            this.setValue('');
-            this.operatorSet = false;
-        }
+        calculate = function () {
+            if (!this.operator || this.lasNumber === null) return;
+            var displayedNumber = parseFloat(this.eqCtl.value);
+            var newValue = 0;
+            switch (this.operator) {
+                case '+':
+                    newValue = add.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '-':
+                    newValue = subtract.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '*':
+                    newValue = multiply.call(this, this.lasNumber, displayedNumber);
+                    break;
+                case '/':
+                    newValue = divide.call(this, this.lasNumber, displayedNumber);
+                    break;
+            }
 
-        this.setValue(this.eqCtl.value + button.innerHTML);
-        if (this.operatorSet) {
-            this.setEquation(this.eqCtl.innerHTML + button.innerHTML);
-        }
-    },
+            setValue.call(this, newValue);
+            this.lasNumber = newValue;
+        };
 
-    calculate: function () {
-        if (!this.operator || this.lasNumber === null) return;
-        var displayedNumber = parseFloat(this.eqCtl.value);
-        var newValue = 0;
-        switch (this.operator) {
-            case '+':
-                newValue = this.add(this.lasNumber, displayedNumber);
-                break;
-            case '-':
-                newValue = this.subtract(this.lasNumber, displayedNumber);
-                break;
-            case '*':
-                newValue = this.multiply(this.lasNumber, displayedNumber);
-                break;
-            case '/':
-                newValue = this.divide(this.lasNumber, displayedNumber);
-                break;
-        }
-
-        this.setValue(newValue);
-        this.lasNumber = newValue;
-    }
-};
+    return {
+        numberClick : numberClick,
+        setOperator : setOperator,
+        clearNumbers : clearNumbers
+    };
+}();
 
 var myCalculator;
 myCalculator = new Calculator('result', 'currentNumber');
