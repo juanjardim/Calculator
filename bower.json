@@ -1,0 +1,29 @@
+{
+  "name": "calculator",
+  "description": "Very simple javascript calculator",
+  "main": "calculator.js",
+  "authors": [
+    "Juan Jardim"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "calculator",
+    "javascript",
+    "prototype",
+    "pattern"
+  ],
+  "moduleType": [],
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/vendor/",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6"
+  }
+}
